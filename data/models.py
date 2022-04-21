@@ -43,7 +43,7 @@ class Product(models.Model):
     description = models.TextField('Описание', blank=True, null=True)
     are_available = models.BooleanField('имеется в наличии', default=True)
     amount = models.IntegerField('Количество товара')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория', related_name='category_detail')
 
     def __str__(self):
         return f'{self.name}'

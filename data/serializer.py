@@ -37,20 +37,20 @@ class RecommendationsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
 class ProductSerializer(serializers.ModelSerializer):
     product_detail = ColorSerializer(many=True)
     prod_detail = TheSizeSerializer(many=True)
     discount_detail = DiscountSerializer(many=True)
     recommendations_detail = RecommendationsSerializer(many=True)
+    category_detail = CategorySerializer(many=True)
 
     class Meta:
         model = Product
-        fields = '__all__'
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    prod = ProductSerializer(many=True)
-
-    class Meta:
-        model = Category
         fields = '__all__'
