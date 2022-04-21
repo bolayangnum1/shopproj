@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator, DecimalValidator
 
 
-
 class Category(models.Model):
 
     class Meta:
