@@ -8,7 +8,7 @@ class TheSizeSerializer(serializers.ModelSerializer):
         model = TheSize
         fields = '__all__'
 
-
+#start
 class OrderingSerializer(serializers.ModelSerializer):
 
     class Meta:
