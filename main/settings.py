@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-import django_heroku
 import dj_database_url
 
 
@@ -138,5 +137,3 @@ SUBDOMAIN_URLCONFS = {
 SITE_ID = 1
 
 db_from_env = dj_database_url.config()
-
-django_heroku.settings(locals())
