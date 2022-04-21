@@ -3,3 +3,4 @@ pychache/
 .idea
 staticfiles
 ../media
+db.sqlite3
