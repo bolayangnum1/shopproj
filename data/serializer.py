@@ -49,7 +49,7 @@ class ProductSerializer(serializers.ModelSerializer):
     prod_detail = TheSizeSerializer(many=True)
     discount_detail = DiscountSerializer(many=True)
     recommendations_detail = RecommendationsSerializer(many=True)
-    category_detail = CategorySerializer(many=True)
+    category = CategorySerializer()
 
     class Meta:
         model = Product
