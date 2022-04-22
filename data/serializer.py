@@ -28,7 +28,7 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = '__all__'
-#start
+
 
 class RecommendationsSerializer(serializers.ModelSerializer):
 
