@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 import dj_database_url
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-r@0*8rdyg6=7k&fl1yywd!=wq*t7^@f3ts*v*4bwvyw10!&aep'
@@ -12,7 +11,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_ALL_ORIGINS = True
-
 
 INSTALLED_APPS = [
     'admin_volt.apps.AdminVoltConfig',
@@ -30,8 +28,7 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_yasg',
     "corsheaders",
-    'cloudinary',
-    'cloudinary_storage',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -80,11 +77,8 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '1',
         'HOST': 'db',
-        'PORT': '5432',
     }
 }
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -113,19 +107,35 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-STATIC_URL = '/staticfiles/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+USE_S3 = os.path.join('USE_S3')
+if USE_S3:
+    # aws settings
+    AWS_ACCESS_KEY_ID = 'AKIA6DZAPB4L7EE5WC4K'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'oneclick-images'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # s3 static settings
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    print(AWS_ACCESS_KEY_ID)
+    print(MEDIA_URL)
+else:
+    MEDIA_URL = 'media/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+STATIC_URL = 'staticfiles/'
+STATIC_ROOT = BASE_DIR / 'staticfiles/'
+
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
-     ],
+    ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.JSONRenderer',
@@ -134,20 +144,6 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ]
 }
-
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'your_cloud_name',
-    'API_KEY': 'your_api_key',
-    'API_SECRET': 'your_api_secret'
-}
-
-SUBDOMAIN_URLCONFS = {
-    None: 'myproject.urls.frontend',  # no subdomain, e.g. ``example.com``
-    'www': 'myproject.urls.frontend',
-    'api': 'myproject.urls.api',
-}
-
 
 SITE_ID = 1
 
