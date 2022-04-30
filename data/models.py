@@ -44,7 +44,7 @@ class Product(models.Model):
         verbose_name = 'Продукт'
         verbose_name_plural = "Продукты"
 
-    name = models.CharField('Название', max_length=100, default='Продукт', validators=[
+    name = models.CharField('Название', max_length=100, validators=[
         RegexValidator(
             regex=r'\.$',
             message='уберите точку!',

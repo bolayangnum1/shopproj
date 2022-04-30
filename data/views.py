@@ -1,8 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from .models import Product, Recommendations, Category, Ordering
 from .serializer import ProductSerializer, RecommendationsSerializer, CategorySerializer, OrderingSerializer
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
+
+
+class PaginationProduct(PageNumberPagination):
+    page_size = 20
+    max_page_size = 1000
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -12,6 +18,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_fields = ['name', 'price']
     search_fields = ['name', 'price']
     ordering_fields = ['price', 'name', 'category']
+    pagination_class = PaginationProduct
 
 
 class RecommendationsViewSet(viewsets.ModelViewSet):
