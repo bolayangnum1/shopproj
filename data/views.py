@@ -20,6 +20,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     ordering_fields = ['price', 'name', 'category']
     pagination_class = PaginationProduct
 
+    def create(self, request):
+        import requests
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+
+        tg_message = {
+            "text": f"имя: ФИО: {serializer.data['full_name']}\n Номер телефона: {serializer.data['phone_number']}\n Область: {serializer.data['region']}\n Адрес: {serializer.data['address']}\n Цена: {serializer.data['price']}\n Корзина: {serializer.data['basket']}",
+            "chat_id": "679974348" #if is group -100
+        }
+        url = "https://api.telegram.org/bot5346235377:AAGg1mWc4FPRxGn1GFcnOBcj75MMLlrAJlA/sendMessage"
+        response = requests.post(url, json=tg_message)
+        print(response.text)
+        return super().create(request)
+
 
 class RecommendationsViewSet(viewsets.ModelViewSet):
     queryset = Recommendations.objects.all()
