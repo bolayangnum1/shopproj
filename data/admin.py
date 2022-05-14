@@ -1,10 +1,5 @@
 from django.contrib import admin
-from .models import Product, Recommendations, Category, Ordering, Color, TheSize, Discount
-
-
-class DiscountInlines(admin.TabularInline):
-    model = Discount
-    extra = 0
+from .models import Product, Recommendations, Category, Ordering, Color, TheSize
 
 
 class TheSizeInlines(admin.TabularInline):
@@ -18,7 +13,7 @@ class ColorInlines(admin.TabularInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ColorInlines, TheSizeInlines, DiscountInlines]
+    inlines = [ColorInlines, TheSizeInlines]
     list_display = ['name', 'price', 'are_available']
     list_filter = ['name', 'price', 'are_available']
     search_fields = ['name', 'price', 'are_available']
@@ -27,7 +22,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('name', 'description')
         }),
         ('Характеристика продукта', {
-            'fields': ('img', 'price', 'are_available', 'amount', 'category')
+            'fields': ('img', 'price', 'are_available', 'amount', 'sale', 'category')
         }),
     )
 
@@ -42,4 +37,3 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Recommendations)
 admin.site.register(Category)
 admin.site.register(Ordering, OrderingAdmin)
-admin.site.register(Discount)

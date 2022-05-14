@@ -1,9 +1,12 @@
 import os
-
-from django.core.mail import send_mail
+from datetime import datetime
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.core.validators import RegexValidator, MinValueValidator, DecimalValidator
+from django.core.validators import RegexValidator, MaxValueValidator
+from data.choice import CURRENCY_CHOICES, CURRENCY_DEFAULT
 from main.utils import get_filename
+from main.settings import AUTH_USER_MODEL
+User = AUTH_USER_MODEL
 
 
 def category_upload_to(instance, filename):
@@ -52,37 +55,36 @@ class Product(models.Model):
         )
     ])
     img = models.ImageField('Картинка', upload_to=product_upload_to, blank=True, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', null=True, validators=[
-        DecimalValidator(
-            max_digits=8,
-            decimal_places=2,
-        )
-    ])
+    price = models.DecimalField(decimal_places=2, max_digits=8, choices=CURRENCY_CHOICES, default=CURRENCY_DEFAULT, verbose_name='Цена')
     description = models.TextField('Описание', blank=True, null=True)
     are_available = models.BooleanField('имеется в наличии', default=True)
     amount = models.IntegerField('Количество товара')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория',
-                                 related_name='category_detail')
+    sale = models.IntegerField('Скидка в процентах', blank=True, default=0)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория', related_name='category_detail')
+    favorites = models.BooleanField('', default=False)
+
+    def get_sale(self):
+        price = int(self.price * (100 - self.sale) / 100)
+        return price
 
     def __str__(self):
         return f'{self.name}'
 
+    # def favorites_save(self):
 
-class Discount(models.Model):
+
+class Review(models.Model):
+
     class Meta:
-        verbose_name = 'Скидкa'
-        verbose_name_plural = 'Скидки'
-
-    discount = models.IntegerField('Скидка', blank=True, null=True, validators=[
-        MinValueValidator(
-            limit_value=1,
-            message='Не менее 1!'
-        )
-    ])
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='discount_detail')
+        verbose_name = 'Отзывы'
+    creview = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
+    userview = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    review = models.TextField(help_text="Отзыв", verbose_name="Отзыв о продукте")
+    created_date = models.DateTimeField(default=datetime.now, blank=True, verbose_name='Дата отзыва')
+    rating = models.PositiveSmallIntegerField(verbose_name=('рейтинг'), validators=[MaxValueValidator(5)])
 
     def __str__(self):
-        return f'{self.discount}'
+        return self.creview
 
 
 class TheSize(models.Model):

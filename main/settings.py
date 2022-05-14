@@ -23,12 +23,17 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
 
     'data.apps.DataConfig',
+    'users.apps.UsersConfig',
 
     'rest_framework',
     'django_filters',
     'drf_yasg',
     "corsheaders",
     'storages',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -63,22 +68,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'main.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'shop',
-        'USER': 'postgres',
-        'PASSWORD': '1',
-        'HOST': 'db',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'shop',
+#         'USER': 'postgres',
+#         'PASSWORD': '1',
+#         'HOST': 'db',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -124,6 +129,13 @@ else:
     MEDIA_URL = 'media/'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'adanovbolot312@gmail.com'
+EMAIL_HOST_PASSWORD = 'bolot2810'
+
 
 STATIC_URL = 'staticfiles/'
 STATIC_ROOT = BASE_DIR / 'staticfiles/'
@@ -143,7 +155,26 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ]
+
 }
+
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'users.serializers.UserSerializer',
+}
+
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 SITE_ID = 1
 
